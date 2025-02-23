@@ -3,8 +3,29 @@ import { OilStatusPieChart } from "@/components/OilStatusPieChart";
 import { DailyUsageChart } from "@/components/DailyUsageChart";
 import { RefillHistoryChart } from "@/components/RefillHistoryChart";
 import { oilUsageData } from "@/utils/mockData";
+import { fetchDailyData, transformDailyData } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
+  
+  const { data: dailyData, isLoading, error } = useQuery({
+    queryKey: ['dailyUsage'],
+    queryFn: async () => {
+      const response = await fetchDailyData();
+      return transformDailyData(response);
+    },
+  });
+
+  if (error) {
+    toast({
+      title: "Error",
+      description: "Failed to fetch daily usage data",
+      variant: "destructive",
+    });
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -18,7 +39,10 @@ const Index = () => {
             used={oilUsageData.current.used}
             remaining={oilUsageData.current.remaining}
           />
-          <DailyUsageChart data={oilUsageData.dailyUsage} />
+          <DailyUsageChart 
+            data={dailyData || []} 
+            isLoading={isLoading}
+          />
           <RefillHistoryChart data={oilUsageData.refillHistory} />
         </div>
       </div>
