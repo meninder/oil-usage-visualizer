@@ -2,20 +2,16 @@
 import { OilStatusPieChart } from "@/components/OilStatusPieChart";
 import { DailyUsageChart } from "@/components/DailyUsageChart";
 import { RefillHistoryChart } from "@/components/RefillHistoryChart";
-import { oilUsageData } from "@/utils/mockData";
-import { fetchDailyData, fetchRefillData, transformDailyData } from "@/utils/api";
+import { fetchDailyData, fetchRefillData, transformDailyData, getCurrentTankStatus } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
   const { toast } = useToast();
   
-  const { data: dailyData, isLoading: isDailyLoading, error: dailyError } = useQuery({
+  const { data: dailyDataResponse, isLoading: isDailyLoading, error: dailyError } = useQuery({
     queryKey: ['dailyUsage'],
-    queryFn: async () => {
-      const response = await fetchDailyData();
-      return transformDailyData(response);
-    },
+    queryFn: fetchDailyData,
   });
 
   const { data: refillData, isLoading: isRefillLoading, error: refillError } = useQuery({
@@ -25,6 +21,9 @@ const Index = () => {
       return transformDailyData(response);
     },
   });
+
+  const tankStatus = dailyDataResponse ? getCurrentTankStatus(dailyDataResponse) : { remaining: 0, used: 0 };
+  const dailyData = dailyDataResponse ? transformDailyData(dailyDataResponse) : [];
 
   if (dailyError || refillError) {
     toast({
@@ -44,11 +43,11 @@ const Index = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <OilStatusPieChart
-            used={oilUsageData.current.used}
-            remaining={oilUsageData.current.remaining}
+            used={tankStatus.used}
+            remaining={tankStatus.remaining}
           />
           <DailyUsageChart 
-            data={dailyData || []} 
+            data={dailyData} 
             isLoading={isDailyLoading}
           />
           <RefillHistoryChart 

@@ -31,3 +31,21 @@ export const transformDailyData = (data: OilDataResponse) => {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .filter(entry => entry.gallons !== null); // Filter out null values
 };
+
+export const getCurrentTankStatus = (data: OilDataResponse) => {
+  const TANK_CAPACITY = 330;
+  
+  // Get the latest date
+  const dates = Object.keys(data).sort((a, b) => 
+    new Date(b).getTime() - new Date(a).getTime()
+  );
+  
+  const latestDate = dates[0];
+  const remaining = data[latestDate].gallons;
+  const used = TANK_CAPACITY - remaining;
+  
+  return {
+    remaining,
+    used
+  };
+};
