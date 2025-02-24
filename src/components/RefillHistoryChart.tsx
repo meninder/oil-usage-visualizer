@@ -10,9 +10,10 @@ interface RefillData {
 
 interface RefillHistoryChartProps {
   data: RefillData[];
+  isLoading?: boolean;
 }
 
-export const RefillHistoryChart = ({ data }: RefillHistoryChartProps) => {
+export const RefillHistoryChart = ({ data, isLoading }: RefillHistoryChartProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,22 +22,28 @@ export const RefillHistoryChart = ({ data }: RefillHistoryChartProps) => {
       className="w-full h-[300px] p-4 bg-white rounded-xl shadow-sm"
     >
       <h3 className="text-lg font-semibold mb-4">Refill History</h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="date"
-            tickFormatter={(date) => format(new Date(date), "MMM d")}
-          />
-          <YAxis />
-          <Tooltip
-            formatter={(value: number) => `${value} gallons`}
-            labelFormatter={(label) => format(new Date(label), "MMMM d, yyyy")}
-            contentStyle={{ background: "white", border: "none", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
-          />
-          <Bar dataKey="gallons" fill="#FF6B6B" radius={[4, 4, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      {isLoading ? (
+        <div className="h-full w-full flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="date"
+              tickFormatter={(date) => format(new Date(date), "MMM d")}
+            />
+            <YAxis />
+            <Tooltip
+              formatter={(value: number) => `${value} gallons`}
+              labelFormatter={(label) => format(new Date(label), "MMMM d, yyyy")}
+              contentStyle={{ background: "white", border: "none", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
+            />
+            <Bar dataKey="gallons" fill="#FF6B6B" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </motion.div>
   );
 };
