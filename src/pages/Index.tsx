@@ -2,7 +2,7 @@
 import { OilStatusPieChart } from "@/components/OilStatusPieChart";
 import { DailyUsageChart } from "@/components/DailyUsageChart";
 import { RefillHistoryChart } from "@/components/RefillHistoryChart";
-import { fetchDailyData, fetchRefillData, transformDailyData, getCurrentTankStatus } from "@/utils/api";
+import { fetchDailyData, fetchRefillData, transformDailyData, transformRefillData, getCurrentTankStatus } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -18,7 +18,7 @@ const Index = () => {
     queryKey: ['refillHistory'],
     queryFn: async () => {
       const response = await fetchRefillData();
-      return transformDailyData(response);
+      return transformRefillData(response);
     },
   });
 

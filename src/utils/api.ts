@@ -2,7 +2,7 @@
 interface OilDataResponse {
   [date: string]: {
     gallons: number;
-    change_gallons: number | null;
+    change_gallons?: number | null;
   };
 }
 
@@ -30,6 +30,15 @@ export const transformDailyData = (data: OilDataResponse) => {
     }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .filter(entry => entry.gallons !== null); // Filter out null values
+};
+
+export const transformRefillData = (data: OilDataResponse) => {
+  return Object.entries(data)
+    .map(([date, value]) => ({
+      date,
+      gallons: value.gallons, // Use gallons directly for refill amounts
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
 
 export const getCurrentTankStatus = (data: OilDataResponse) => {
