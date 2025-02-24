@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/oil-dashboard/", // Add this line - replace "oil-dashboard" with your repo name
+  base: "/oil-usage-visualizer/", // Add this line - replace "oil-dashboard" with your repo name
   plugins: [
     react(),
     mode === 'development' &&
