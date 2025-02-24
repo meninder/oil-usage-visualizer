@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/oil-usage-visualizer/",
+  base: process.env.NODE_ENV === 'production' ? '/oil-usage-visualizer/' : '/',
   plugins: [
     react(),
     mode === 'development' &&
@@ -20,5 +20,9 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
   },
 }));
