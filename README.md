@@ -18,8 +18,8 @@ Dashboard to monitor home heating oil levels.
 
 ## API Endpoints
 
-*   (Name of API Function 1):  AWS Lambda Function to fetch oil level data.
-*   (Name of API Function 2):  AWS Lambda Function (explain what it does).
+*   AWS Lambda Function to fetch oil level data: [here](https://o3rm6sgjxd.execute-api.us-east-1.amazonaws.com/main/getDailyData)
+*   AWS Lambda Function to get refill data: [here](https://8rtdju7dv9.execute-api.us-east-1.amazonaws.com/main/getRefillsData)
 
 ## Deployment
 
